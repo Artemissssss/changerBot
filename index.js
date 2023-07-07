@@ -52,29 +52,29 @@ async function deleteRun(data) {
 const start = () => {
     bot.setMyCommands([
         {command:"/help", description:"Туторіал"},
-        {command:"/htyvka", description:"Надіслати хтивку"},
-        {command:"/gethtyvka", description:"Подивитися хтивку"},
+        {command:"/image", description:"Надіслати зображення"},
+        {command:"/getimage", description:"Подивитися зображення"},
     ])
 
     bot.on("message", async msg => {
         const text = msg.text;
         const chatId = msg.chat.id;
-        if(msg?.caption?.includes("/htyvka")){
+        if(msg?.caption?.includes("/image")){
             const newIdH = await main()
             run({idH:newIdH,
             photo:msg.photo[0].file_id,
             del:msg.caption.split(" ")[1],
             time:msg.caption.split(" ")[2]})  
-            bot.sendMessage(chatId, `Ви сторили хтивку по айді ${newIdH}`)
-        } else if(text?.includes("/gethtyvka")){
+            bot.sendMessage(chatId, `Ви сторили зображення по айді ${newIdH}`)
+        } else if(text?.includes("/getimage")){
             const htOb = await getRun(text.split(" ")[1]);
             console.log(htOb)
             if(htOb?.del === "@"+msg.from.username){
                 if(htOb.time === "0"){
-                    await bot.sendPhoto(chatId,htOb.photo,{caption : "Необмежена хтивка для тебе(? вічний туалет)"} );
+                    await bot.sendPhoto(chatId,htOb.photo,{caption : "Необмежене зображення для тебе"} );
                     await deleteRun(htOb.idH)
                 }else{
-                    await bot.sendPhoto(chatId,htOb.photo,{caption : `Хтивка для тебе на ${htOb.time} секунд(попроси ще раз)`} );
+                    await bot.sendPhoto(chatId,htOb.photo,{caption : `Зображення для тебе на ${htOb.time} секунд`} );
                     await deleteRun(htOb.idH)
                     setTimeout(() => {
                         const msgId = msg.message_id+1;
@@ -83,7 +83,7 @@ const start = () => {
                 }
             }
         } else if(text?.includes("/help")){
-            bot.sendMessage(chatId, `Привіт \nЩоб стоврити хтивку напишіть:\n "/htyvka @юзернейм-отримувача час-у-секуднах(якщо необмежений час то 0)" \n Для отримання хтивки напиить:\n "/gethtyvka айді-хтивки"`)
+            bot.sendMessage(chatId, `Привіт \nЩоб стоврити хтивку напишіть:\n "/image @юзернейм-отримувача час-у-секуднах(якщо необмежений час то 0)" \n Для отримання хтивки напиить:\n "/getimage айді-хтивки"`)
         }
     })
 }
